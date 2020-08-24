@@ -20,9 +20,13 @@ const fetchMatchingOccurences = async (e) => {
   const dynamicAPIEndpoint = await buildAPIEndPoint();
 
   ////Displays a simple loading text in the results container to let the user know their request is being processed.
-  resultsContainer.innerHTML = `<p>Loading...</p>`;
+  resultsContainer.innerHTML = `
+  <div class="result">
+    <p>Loading...</p>
+  </div>
+  `;
 
-  //Attemtpting the fetch request
+  //Attempting the fetch request
   try {
     const response = await fetch(dynamicAPIEndpoint);
     const data = await response.json();
@@ -31,11 +35,15 @@ const fetchMatchingOccurences = async (e) => {
     console.log(data);
 
     //setting the innerHTML of the results container with our data
-    resultsContainer.innerHTML = `<p>Your query "${
+    resultsContainer.innerHTML = `
+    <div class="result">
+    <p>Your query "${
       query.value
     }" appears ${data} time${data === 1 ? "" : "s"} on <a href="${
       url.value
-    }" target="_blank">${url.value}</a>.`;
+    }" target="_blank">${url.value}</a>.
+    </div>
+    `;
 
     //Clearing out the form
     url.value = "";

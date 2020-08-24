@@ -4,33 +4,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebScraper</title>
+    <link rel="stylesheet" href="app.css">
   </head>
   <body>
-    <h1>Web Scraper</h1>
+    <div class="container">
+
+    <header>
+      <h1>Web Scraper</h1>
+      <p>Wondering how many times a word appears on a particular website? <br />
+      Enter a url and word below to find out. </p>
+    </header>
 
     <!-- user form accepts a url and a string -->
     <form id="web-scraper-form">
-      <input
-        type="url"
-        name="url"
-        id="url"
-        placeholder="example.com"
-        required
-      />
-      <input
-        type="text"
-        name="query"
-        id="query"
-        placeholder="word or phrase..."
-        required
-      />
-      <input type="submit" />
+      <div class="input-section">
+        <label for="url">
+          Website to Search: 
+        </label>
+        <input
+          type="url"
+          name="url"
+          id="url"
+          placeholder="example.com"
+          required
+        />
+      </div>
+      <div class="input-section">
+        <label for="query">
+          Word to Search For: 
+        </label>
+        <input
+          type="text"
+          name="query"
+          id="query"
+          placeholder="word or phrase..."
+          required
+        />
+      </div>
+      <input type="submit" class="submit-button"/>
     </form>
 
     <!-- Results. Content of container is set dynamically based on user inputs. -->
-
-    <div id="results-container"></div>
-
+    <div id="results-container">
+    </div>
+    <footer>
+      Web Scraper Built by Blake Douglass and Hannah Livnat
+    </footer>
+    </div>
     <script src="app.js"></script>
   </body>
 </html>
