@@ -6,6 +6,20 @@ const webScraperForm = document.querySelector("#web-scraper-form");
 //Grabbing the results container
 const resultsContainer = document.querySelector("#results-container");
 
+//Captcha Check
+const captchaCheck = (e) => {
+  e.preventDefault();
+  //grabbing the response from Google Captcha
+  const response = grecaptcha.getResponse();
+  if (response.length == 0) {
+    return false;
+  }
+  //upon successful captcha proceed with scraping.
+  fetchMatchingOccurences();
+  //reset captcha
+  grecaptcha.reset();
+};
+
 // Here we build and return the dynamic API endpoint
 // by grabbing the values of the URL and Query input field
 const buildAPIEndPoint = () => {
@@ -13,9 +27,7 @@ const buildAPIEndPoint = () => {
 };
 
 //Here we fetch the reponse from our dynamic API endpoint and log it to the console.
-const fetchMatchingOccurences = async (e) => {
-  //Preventing the default form behavior
-  e.preventDefault();
+const fetchMatchingOccurences = async () => {
   //Creating our dynamicAPIendpoint
   const dynamicAPIEndpoint = await buildAPIEndPoint();
 
@@ -37,11 +49,9 @@ const fetchMatchingOccurences = async (e) => {
     //setting the innerHTML of the results container with our data
     resultsContainer.innerHTML = `
     <div class="result">
-    <p>Your query "${
-      query.value
-    }" appears ${data} time${data === 1 ? "" : "s"} on <a href="${
-      url.value
-    }" target="_blank">${url.value}</a>.
+    <p>Your query "${query.value}" appears ${data} time${
+      data === 1 ? "" : "s"
+    } on <a href="${url.value}" target="_blank">${url.value}</a>.
     </div>
     `;
 
@@ -58,4 +68,4 @@ const fetchMatchingOccurences = async (e) => {
 //Event Listeners
 
 //Attaching an onsumbit listener to the form which then invokes our fetch function.
-webScraperForm.addEventListener("submit", fetchMatchingOccurences);
+webScraperForm.addEventListener("submit", captchaCheck);
