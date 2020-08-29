@@ -41,6 +41,17 @@ const fetchMatchingOccurences = async () => {
   //Attempting the fetch request
   try {
     const response = await fetch(dynamicAPIEndpoint);
+
+    //Checks for bad responses
+    if (response.status >= 400) {
+      resultsContainer.innerHTML = `
+  <div class="result">
+    <p>Invalid URL</p>
+  </div>
+  `;
+      return;
+    }
+
     const data = await response.json();
 
     //logging the data that come sback from our lambda function
