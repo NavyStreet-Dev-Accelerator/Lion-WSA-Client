@@ -17,12 +17,6 @@ const captchaCheck = () => {
   return true;
 };
 
-// Here we build and return the dynamic API endpoint
-// by grabbing the values of the URL and Query input field
-const buildAPIEndPoint = () => {
-  return `https://4kgxi9mav4.execute-api.us-west-1.amazonaws.com/default/LionScraper?url=${url.value}&query=${query.value}`;
-};
-
 //Here we fetch the reponse from our dynamic API endpoint and log it to the console.
 const fetchMatchingOccurences = async (e) => {
   e.preventDefault();
@@ -33,7 +27,7 @@ const fetchMatchingOccurences = async (e) => {
   }
 
   //Creating our dynamicAPIendpoint
-  const dynamicAPIEndpoint = await buildAPIEndPoint();
+  const dynamicAPIEndpoint = `https://4kgxi9mav4.execute-api.us-west-1.amazonaws.com/default/LionScraper?url=${url.value}&query=${query.value}`;
 
   ////Displays a simple loading text in the results container to let the user know their request is being processed.
   resultsContainer.innerHTML = `
