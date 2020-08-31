@@ -7,17 +7,14 @@ const webScraperForm = document.querySelector("#web-scraper-form");
 const resultsContainer = document.querySelector("#results-container");
 
 //Captcha Check
-const captchaCheck = (e) => {
-  e.preventDefault();
+const captchaCheck = () => {
   //grabbing the response from Google Captcha
   const response = grecaptcha.getResponse();
   if (response.length == 0) {
     return false;
   }
-  //upon successful captcha proceed with scraping.
-  fetchMatchingOccurences();
-  //reset captcha
   grecaptcha.reset();
+  return true;
 };
 
 // Here we build and return the dynamic API endpoint
@@ -27,7 +24,14 @@ const buildAPIEndPoint = () => {
 };
 
 //Here we fetch the reponse from our dynamic API endpoint and log it to the console.
-const fetchMatchingOccurences = async () => {
+const fetchMatchingOccurences = async (e) => {
+  e.preventDefault();
+  const captchaSuccess = captchaCheck();
+
+  if (!captchaSuccess) {
+    return false;
+  }
+
   //Creating our dynamicAPIendpoint
   const dynamicAPIEndpoint = await buildAPIEndPoint();
 
@@ -79,4 +83,4 @@ const fetchMatchingOccurences = async () => {
 //Event Listeners
 
 //Attaching an onsumbit listener to the form which then invokes our fetch function.
-webScraperForm.addEventListener("submit", captchaCheck);
+webScraperForm.addEventListener("submit", fetchMatchingOccurences);
