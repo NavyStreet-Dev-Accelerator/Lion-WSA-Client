@@ -30,11 +30,7 @@ const fetchMatchingOccurences = async (e) => {
   const dynamicAPIEndpoint = `https://4kgxi9mav4.execute-api.us-west-1.amazonaws.com/default/LionScraper?url=${url.value}&query=${query.value}`;
 
   ////Displays a simple loading text in the results container to let the user know their request is being processed.
-  resultsContainer.innerHTML = `
-  <div class="result">
-    <p>Loading...</p>
-  </div>
-  `;
+  resultsContainer.innerHTML = `<p>Scanning...</p>`;
 
   //Attempting the fetch request
   try {
@@ -42,11 +38,8 @@ const fetchMatchingOccurences = async (e) => {
 
     //Checks for bad responses
     if (response.status >= 400) {
-      resultsContainer.innerHTML = `
-  <div class="result">
-    <p>Invalid URL</p>
-  </div>
-  `;
+      resultsContainer.innerHTML =
+        '<p>This web page is: <span class="invalid">invalid!</span></p><p>Please make sure the URL is correct.</p>';
       return;
     }
 
@@ -56,13 +49,10 @@ const fetchMatchingOccurences = async (e) => {
     console.log(data);
 
     //setting the innerHTML of the results container with our data
-    resultsContainer.innerHTML = `
-    <div class="result">
-    <p>Your query "${query.value}" appears ${data} time${
+    resultsContainer.innerHTML = `<p>This web page is: <span class="valid">valid!</span></p>
+    <p>Your phrase "${query.value}" was found ${data} time${
       data === 1 ? "" : "s"
-    } on <a href="${url.value}" target="_blank">${url.value}</a>.
-    </div>
-    `;
+    }.`;
 
     //Clearing out the form
     url.value = "";
