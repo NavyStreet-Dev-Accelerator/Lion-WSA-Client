@@ -6,44 +6,53 @@ const webScraperForm = document.querySelector("#web-scraper-form");
 //Grabbing the results container
 const resultsContainer = document.querySelector("#results-container");
 
-// Here we build and return the dynamic API endpoint
-// by grabbing the values of the URL and Query input field
-const buildAPIEndPoint = () => {
-  return `https://4kgxi9mav4.execute-api.us-west-1.amazonaws.com/default/LionScraper?url=${url.value}&query=${query.value}`;
+//Captcha Check
+const captchaCheck = () => {
+  //grabbing the response from Google Captcha
+  const response = grecaptcha.getResponse();
+  if (response.length == 0) {
+    return false;
+  }
+  grecaptcha.reset();
+  return true;
 };
 
 //Here we fetch the reponse from our dynamic API endpoint and log it to the console.
 const fetchMatchingOccurences = async (e) => {
-  //Preventing the default form behavior
   e.preventDefault();
+  const captchaSuccess = captchaCheck();
+
+  if (!captchaSuccess) {
+    return false;
+  }
+
   //Creating our dynamicAPIendpoint
-  const dynamicAPIEndpoint = await buildAPIEndPoint();
+  const dynamicAPIEndpoint = `https://4kgxi9mav4.execute-api.us-west-1.amazonaws.com/default/LionScraper?url=${url.value}&query=${query.value}`;
 
   ////Displays a simple loading text in the results container to let the user know their request is being processed.
-  resultsContainer.innerHTML = `
-  <div class="result">
-    <p>Loading...</p>
-  </div>
-  `;
+  resultsContainer.innerHTML = `<p>Scanning...</p>`;
 
   //Attempting the fetch request
   try {
     const response = await fetch(dynamicAPIEndpoint);
+
+    //Checks for bad responses
+    if (response.status >= 400) {
+      resultsContainer.innerHTML =
+        '<p>This web page is: <span class="invalid">invalid!</span></p><p>Please make sure the URL is correct.</p>';
+      return;
+    }
+
     const data = await response.json();
 
     //logging the data that come sback from our lambda function
     console.log(data);
 
     //setting the innerHTML of the results container with our data
-    resultsContainer.innerHTML = `
-    <div class="result">
-    <p>Your query "${
-      query.value
-    }" appears ${data} time${data === 1 ? "" : "s"} on <a href="${
-      url.value
-    }" target="_blank">${url.value}</a>.
-    </div>
-    `;
+    resultsContainer.innerHTML = `<p>This web page is: <span class="valid">valid!</span></p>
+    <p>Your phrase "${query.value}" was found ${data} time${
+      data === 1 ? "" : "s"
+    }.`;
 
     //Clearing out the form
     url.value = "";
